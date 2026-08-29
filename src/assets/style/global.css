@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   主题色变量（RGB 三元组，配合 tailwind alpha 通道）
+   极简液态轻拟物风 · 雾蓝青渐变主色 + 鎏金点缀
+   ============================================================ */
+:root {
+  /* 主色 / 渐变 / 点缀（双主题固定，品牌识别色） */
+  --color-primary: 79 144 205; /* #4F94CD 雾蓝 */
+  --color-secondary: 100 194 166; /* #64C2A6 青绿 */
+  --color-accent: 232 220 202; /* #E8DCCA 极淡鎏金 */
+
+  /* 亮色主题：薄雾白基底 + 深墨文字 */
+  --color-bg: 244 247 248;
+  --color-bg-soft: 236 241 243;
+  --color-surface: 255 255 255;
+  --color-text: 24 28 32;
+  --color-text-muted: 72 80 86;
+  --color-text-faint: 120 130 136;
+  --color-border: 210 217 221;
+  --color-shadow: 79 100 120;
+
+  /* 磨砂玻璃表面（用于 backdrop 元素） */
+  --glass-bg: 255 255 255;
+  --glass-alpha: 0.62;
+  --glass-border: 255 255 255;
+  --glass-border-alpha: 0.7;
+}
+
+.dark {
+  /* 暗色主题：淡墨黑基底 + 明亮白文字 */
+  --color-bg: 12 16 19;
+  --color-bg-soft: 16 21 24;
+  --color-surface: 22 28 31;
+  --color-text: 240 244 246;
+  --color-text-muted: 192 200 206;
+  --color-text-faint: 136 146 152;
+  --color-border: 48 56 61;
+  --color-shadow: 0 0 0;
+
+  --glass-bg: 22 28 31;
+  --glass-alpha: 0.55;
+  --glass-border: 255 255 255;
+  --glass-border-alpha: 0.08;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    line-height: 1.6;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'tnum';
+  }
+
+  /* 波点层（仅波点图案，无背景色，流体透过间隙可见）
+     z-index:1 在 canvas(0) 之上、内容(2) 之下 */
+  .bg-dots {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: radial-gradient(rgb(var(--color-primary) / var(--dot-opacity, 0.14)) var(--dot-radius, 0.6px), transparent var(--dot-radius, 0.6px));
+    background-size: var(--dot-size, 16px) var(--dot-size, 16px);
+    background-attachment: fixed;
+  }
+  .dark .bg-dots {
+    background-image: radial-gradient(rgb(var(--color-primary) / var(--dot-opacity-dark, 0.08)) var(--dot-radius, 0.6px), transparent var(--dot-radius, 0.6px));
+  }
+
+  /* 主题切换平滑过渡（颜色、背景），杜绝闪烁突变 */
+  body,
+  .theme-transition,
+  .theme-transition * {
+    transition:
+      background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      fill 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  ::selection {
+    background: rgb(var(--color-primary) / 0.22);
+  }
+
+  /* 极简滚动条 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-border));
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  /* 磨砂玻璃质感容器 */
+  .glass {
+    background: rgb(var(--glass-bg) / var(--glass-alpha));
+    backdrop-filter: blur(1px) saturate(160%);
+    -webkit-backdrop-filter: blur(1px) saturate(160%);
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+  }
+
+  /* 渐变文字（品牌色） */
+  .text-gradient {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--color-primary)),
+      rgb(var(--color-secondary))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* 渐变描边微光（hover 联动） */
+  .ring-glow {
+    box-shadow:
+      0 0 0 1px rgb(var(--color-primary) / 0.18),
+      0 10px 40px -10px rgb(var(--color-primary) / 0.35);
+  }
+
+  /* 卡片默认轻投影 + 边框 */
+  .card-surface {
+    @apply glass shadow-soft rounded-xl;
+  }
+
+  /* Hero 区域定位容器（水印 ::after 需要 position:relative） */
+  .hero-texture {
+    position: relative;
+    overflow: hidden;
+  }
+  /* Hero 区域超大水印文字（::after 伪元素叠加，不影响点阵纹理）
+     通过 CSS 变量接收配置：--wm-text / --wm-size / --wm-rotate / --wm-x / --wm-y / --wm-opacity / --wm-opacity-dark
+     变量由 Hero.vue 的 :style 动态注入，未配置时使用默认值
+     position:fixed 使水印固定于视口，与背景点阵同步不随滚动 */
+  .hero-texture::after {
+    content: var(--wm-text, "QiuMonster");
+    display: var(--wm-display, none);
+    position: fixed;
+    top: var(--wm-y, 50%);
+    left: var(--wm-x, 50%);
+    transform: translate(-50%, -50%) rotate(var(--wm-rotate, -12deg));
+    font-size: var(--wm-size, 22vw);
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    color: rgb(var(--color-primary) / var(--wm-opacity, 0.04));
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+  .dark .hero-texture::after {
+    color: rgb(var(--color-primary) / var(--wm-opacity-dark, 0.06));
+  }
+}
+
+@layer utilities {
+  /* 动效减弱：尊重系统偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

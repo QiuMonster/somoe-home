@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/webp" href="/logo1024-1500.webp?v=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>Somoe Home · QiuMonster 个人聚合门户</title>
+    <meta name="title" content="Somoe Home · QiuMonster 个人聚合门户" />
+    <meta
+      name="description"
+      content="Somoe Home — QiuMonster 创建的个人聚合门户，汇聚内容创作、开源项目与工具站点。极简液态轻拟物风格，暗色与亮色主题自适应。"
+    />
+    <meta name="keywords" content="Somoe Home, QiuMonster, 个人门户, 开源项目, 内容创作, QiuStudio, Ocean Book, Vue, TypeScript" />
+    <meta name="author" content="QiuMonster" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://somoe.xyz" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://somoe.xyz" />
+    <meta property="og:title" content="Somoe Home · QiuMonster 个人聚合门户" />
+    <meta
+      property="og:description"
+      content="Somoe Home — QiuMonster 创建的个人聚合门户，汇聚内容创作、开源项目与工具站点。"
+    />
+    <meta property="og:site_name" content="Somoe Home" />
+    <meta property="og:locale" content="zh_CN" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://somoe.xyz" />
+    <meta name="twitter:title" content="Somoe Home · QiuMonster 个人聚合门户" />
+    <meta
+      name="twitter:description"
+      content="Somoe Home — QiuMonster 创建的个人聚合门户，汇聚内容创作、开源项目与工具站点。"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#4F94CD" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // 首屏前确定主题，避免闪烁突变
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('somoe_theme')
+          var mode =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          if (mode === 'dark') document.documentElement.classList.add('dark')
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

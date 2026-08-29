@@ -1,0 +1,38 @@
+[
+  {
+    "name": "QiuMonster's Ocean Book",
+    "url": "https://blog.somoe.xyz/",
+    "avatar": "/static/default/QiuMonster.jpg",
+    "description": "个人博客，记录技术与思考",
+    "bg": "/static/default/friend-bg-self.webp",
+    "rss": "/rss.xml",
+    "rssMode": "dynamic"
+  },
+  {
+    "name": "思迈时光",
+    "url": "https://blog.sdsml.top/",
+    "avatar": "/static/friends/思迈时光.jpg",
+    "description": "于思考中前行，于时光里生长",
+    "bg": "/static/default/friend-bg.jpg",
+    "rss": "https://blog.sdsml.top/feed/",
+    "rssMode": "static"
+  },
+  {
+    "name": "合荒小站",
+    "url": "https://hehuang.site",
+    "avatar": "/static/friends/合荒小站.jpg",
+    "description": "万物合鸣·独守一荒",
+    "bg": "/static/friends/合荒小站-bg.webp",
+    "rss": "https://hehuang.site/index.xml",
+    "rssMode": "dynamic"
+  },
+  {
+    "name": "UpXuu's blog",
+    "url": "https://upxuu.com",
+    "avatar": "https://upxuu.com/images/me.jpg",
+    "description": "逐光而上",
+    "bg": "https://img.upxuu.lcrworld.xyz/images/2026/7/1.webp",
+    "rss": "https://upxuu.com/rss.xml",
+    "rssMode": "dynamic"
+  }
+]
