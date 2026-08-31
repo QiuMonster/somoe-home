@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useConfig } from '@/hooks/useConfig'
+import { useTheme } from '@/hooks/useTheme'
 import SIcon from '@/components/base/SIcon.vue'
 
 const { profile } = useConfig()
+const { resolved } = useTheme()
+
+const currentLogo = computed(() => resolved.value === 'dark' ? (profile.logoDark || profile.logo) : profile.logo)
 </script>
 
 <template>
@@ -12,8 +17,8 @@ const { profile } = useConfig()
         <!-- 左：品牌 -->
         <div class="flex flex-col items-center gap-2 sm:items-start">
           <div class="flex items-center gap-2">
-            <template v-if="profile.logo">
-              <img :src="profile.logo" alt="Somoe Home" class="h-8 w-8 rounded-full object-cover" />
+            <template v-if="currentLogo">
+              <img :src="currentLogo" alt="Somoe Home" class="h-8 w-8 rounded-full object-cover" />
               <span class="text-gradient text-lg font-extrabold">Somoe Home</span>
             </template>
             <template v-else>
@@ -23,12 +28,15 @@ const { profile } = useConfig()
               <span class="text-gradient text-lg font-extrabold">Somoe Home</span>
             </template>
           </div>
-          <p class="text-sm font-medium text-ink-muted">QiuMonster 的内容创作和开源项目的导航站点</p>
+          <p class="text-sm font-medium text-ink-muted">{{ profile.footer.siteDesc }}</p>
         </div>
 
         <!-- 右：导航 -->
         <nav class="flex flex-wrap justify-center gap-x-8 gap-y-2">
           <router-link to="/" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">首页</router-link>
+          <router-link to="/blog" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">博客</router-link>
+          <router-link to="/category" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">分类</router-link>
+          <router-link to="/archive" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">归档</router-link>
           <router-link to="/friends" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">友链</router-link>
           <a href="https://blog.somoe.xyz" target="_blank" rel="noopener noreferrer" class="text-sm font-bold text-ink-muted transition-colors hover:text-primary">Ocean Blog</a>
           <a href="https://studio.qiumonster.com" target="_blank" rel="noopener noreferrer" class="text-sm text-ink-muted transition-colors hover:text-primary">QiuStudio</a>
@@ -39,26 +47,28 @@ const { profile } = useConfig()
       <!-- 版权备案 -->
       <div class="mx-auto mt-10 max-w-5xl border-t border-line pt-6">
         <div class="flex flex-col items-center justify-between gap-3 text-xs text-ink-faint sm:flex-row">
-          <p>© 2026 Somoe Home. 保留所有权利。</p>
-          <p>Powered by QiuMonster</p>
+          <p>{{ profile.footer.copyright }}</p>
+          <p>{{ profile.footer.poweredBy }}</p>
         </div>
-        <div class="mt-3 flex flex-wrap items-center justify-center gap-3 text-xs text-ink-faint sm:justify-end">
+        <div v-if="profile.footer.filing" class="mt-3 flex flex-wrap items-center justify-center gap-3 text-xs text-ink-faint sm:justify-end">
           <a
-            href="https://beian.miit.gov.cn/"
+            v-if="profile.footer.filing.icp"
+            :href="profile.footer.filing.icpUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="transition-colors hover:text-primary"
           >
-            皖ICP备2025087176号-2
+            {{ profile.footer.filing.icp }}
           </a>
           <a
-            href="https://beian.mps.gov.cn/#/query/webSearch?code=341324020000239"
+            v-if="profile.footer.filing.police"
+            :href="profile.footer.filing.policeUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="flex items-center gap-1 transition-colors hover:text-primary"
           >
-            <img src="/beian.png" alt="" class="h-3.5 w-3.5" />
-            皖公网安备341324020000239号
+            <img v-if="profile.footer.filing.policeIcon" :src="profile.footer.filing.policeIcon" alt="" class="h-3.5 w-3.5" />
+            {{ profile.footer.filing.police }}
           </a>
         </div>
       </div>

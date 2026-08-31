@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { useConfig } from '@/hooks/useConfig'
 import { useGsapAnim } from '@/hooks/useGsapAnim'
 import SIcon from '@/components/base/SIcon.vue'
@@ -14,6 +14,8 @@ const bioEl = ref<HTMLElement | null>(null)
 const domainsEl = ref<HTMLElement | null>(null)
 const tagsEl = ref<HTMLElement | null>(null)
 const socialsEl = ref<HTMLElement | null>(null)
+
+let heroTweens: ReturnType<typeof enter>[] = []
 
 const avatarInitial = computed(() => profile.nickname.charAt(0).toUpperCase())
 const nicknameChars = computed(() => profile.nickname.split(''))
@@ -65,26 +67,31 @@ function tagClass(index: number): string {
 
 onMounted(async () => {
   await nextTick()
-  enter(avatarEl.value, { y: 20, delay: 0 })
+  heroTweens.push(enter(avatarEl.value, { y: 20, delay: 0 }))
   if (nicknameCharsEl.value) {
-    charsEnter(nicknameCharsEl.value.children, { delay: 0.15 })
+    heroTweens.push(charsEnter(nicknameCharsEl.value.children, { delay: 0.15 }))
   }
-  enter(sloganEl.value, { y: 12, delay: 0.5 })
-  enter(bioEl.value, { y: 16, delay: 0.7 })
-  enter(domainsEl.value, { y: 12, delay: 0.85 })
+  heroTweens.push(enter(sloganEl.value, { y: 12, delay: 0.5 }))
+  heroTweens.push(enter(bioEl.value, { y: 16, delay: 0.7 }))
+  heroTweens.push(enter(domainsEl.value, { y: 12, delay: 0.85 }))
   if (tagsEl.value) {
-    staggerEnter(tagsEl.value.children, { y: 12, stagger: 0.06, delay: 1.05 })
+    heroTweens.push(staggerEnter(tagsEl.value.children, { y: 12, stagger: 0.06, delay: 1.05 }))
   }
   if (socialsEl.value) {
-    staggerEnter(socialsEl.value.children, { y: 14, stagger: 0.07, delay: 1.25 })
+    heroTweens.push(staggerEnter(socialsEl.value.children, { y: 14, stagger: 0.07, delay: 1.25 }))
   }
+})
+
+onUnmounted(() => {
+  heroTweens.forEach((tw) => tw?.kill?.())
+  heroTweens = []
 })
 </script>
 
 <template>
   <section id="about" class="hero-texture relative flex min-h-screen items-center justify-center" :style="watermarkVars">
     <div class="container px-4 py-8 sm:px-6 sm:py-12">
-      <div class="mx-auto max-w-2xl">
+      <div class="mx-auto max-w-[46rem]">
         <!-- 头像 + 名称行 -->
         <div class="flex items-center gap-4 sm:gap-6">
           <div

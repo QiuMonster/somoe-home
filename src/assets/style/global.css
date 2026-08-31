@@ -162,8 +162,18 @@
   }
 }
 
+/* Shiki 双主题代码高亮切换（放在 @layer 外部确保优先级） */
+.shiki-highlight .shiki {
+  background-color: transparent !important;
+}
+.dark .shiki-highlight .shiki {
+  color: var(--shiki-dark) !important;
+}
+.dark .shiki-highlight .shiki span {
+  color: var(--shiki-dark) !important;
+}
+
 @layer utilities {
-  /* 动效减弱：尊重系统偏好 */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

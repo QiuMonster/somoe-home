@@ -131,16 +131,58 @@ export interface ThemeBgConfig {
   dark: string
 }
 
+/** 本站信息（友链交换用） */
+export interface SiteProfile {
+  /** 站点名称 */
+  name: string
+  /** 站点地址 */
+  url: string
+  /** 站点头像 */
+  avatar: string
+  /** 站点描述 */
+  description: string
+  /** RSS 订阅地址 */
+  rss?: string
+  /** 站点背景图 */
+  bg?: string
+}
+
+/** 备案信息 */
+export interface FilingInfo {
+  /** ICP 备案号 */
+  icp?: string
+  /** ICP 备案查询链接 */
+  icpUrl?: string
+  /** 公网安备号 */
+  police?: string
+  /** 公网安备查询链接 */
+  policeUrl?: string
+  /** 公网安备图标路径 */
+  policeIcon?: string
+}
+
 /** 底部信息 */
 export interface FooterInfo {
-  /** 技术栈标签 */
-  techStack: string[]
   /** 版权文案 */
   copyright: string
-  /** 签名格言 */
-  signature: string
-  /** 是否展示访问统计（前端模拟） */
-  visitStats?: boolean
+  /** 站点描述（底部品牌区域简介） */
+  siteDesc?: string
+  /** 技术支持文案（如 Powered by xxx） */
+  poweredBy?: string
+  /** 备案信息 */
+  filing?: FilingInfo
+}
+
+/** 导航菜单项 */
+export interface NavItem {
+  /** 显示名称 */
+  label: string
+  /** 路由路径 */
+  path: string
+  /** Tailwind 主色名（sky/amber/emerald/violet/rose 等） */
+  color: string
+  /** 移动端圆形图标内的单字（留空则取 label 首字） */
+  shortLabel?: string
 }
 
 /** 个人信息配置 */
@@ -157,12 +199,18 @@ export interface ProfileConfig {
   avatar?: string
   /** Logo 图片路径（public 目录，导航栏+底部使用，留空则显示文字+图标） */
   logo?: string
+  /** Logo 暗色模式图片路径（public 目录，留空则使用 logo） */
+  logoDark?: string
   /** 身份/技术栈标签 */
   tags?: string[]
   /** 社交链接列表 */
   socials: SocialLink[]
   /** 域名列表 */
   domains?: DomainLink[]
+  /** 导航菜单项 */
+  nav: NavItem[]
+  /** 本站信息（友链交换用） */
+  siteProfile?: SiteProfile
   footer: FooterInfo
 }
 
@@ -200,6 +248,18 @@ export interface ThemeConfig {
   fluid: FluidConfig
   /** 水印配置 */
   watermark: WatermarkConfig
+}
+
+/** 博客加载模式 */
+export type BlogLoadMode = 'scroll' | 'pagination'
+
+/** 博客配置 */
+export interface BlogConfig {
+  columns: number
+  loadMode: BlogLoadMode
+  pageSize: number
+  toc: boolean
+  tocOffset: number
 }
 
 /** 用户偏好（localStorage 持久化） */

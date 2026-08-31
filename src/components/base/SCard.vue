@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import gsap from 'gsap'
 import type { SiteItem } from '@/types/config'
 import { useGsapAnim } from '@/hooks/useGsapAnim'
 import SIcon from './SIcon.vue'
@@ -46,6 +47,7 @@ onMounted(() => {
   if (rootEl.value) cleanup = bindCardHover(rootEl.value, props.intensity)
 })
 onUnmounted(() => {
+  if (rootEl.value) gsap.killTweensOf(rootEl.value)
   cleanup = null
 })
 

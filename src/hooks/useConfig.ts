@@ -2,13 +2,8 @@ import { reactive, computed, watch } from 'vue'
 import { siteConfig } from '@/config/site.config'
 import { profileConfig } from '@/config/profile.config'
 import { themeConfig } from '@/config/theme.config'
+import { blogConfig } from '@/config/blog.config'
 import type { AnimConfig } from '@/types/config'
-
-// ============================================================
-// 全局配置读取钩子（统一引入）
-// 管理站点/个人/主题配置 + 用户本地偏好（置顶、动效覆盖）
-// 模块级单例 reactive，跨组件共享同一状态
-// ============================================================
 
 const PINNED_KEY = 'somoe_pinned'
 const ANIM_KEY = 'somoe_anim'
@@ -93,6 +88,7 @@ export function useConfig() {
     site: siteConfig,
     profile: profileConfig,
     theme: themeConfig,
+    blog: blogConfig,
     prefs: state,
     resolvedAnim,
     isPinned,

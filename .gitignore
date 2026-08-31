@@ -29,3 +29,5 @@ deveco.bat
 .trae/*
 .vscode/*
 docx/*
+public/static/posts/*
+src/data/self/*

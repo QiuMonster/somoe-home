@@ -52,6 +52,19 @@ import {
   DoorOpen,
   Waves,
   MoreHorizontal,
+  Calendar,
+  Archive,
+  FolderOpen,
+  Tag,
+  ChevronLeft,
+  ChevronRight,
+  User,
+  Shield,
+  Rss,
+  List,
+  Copy,
+  Check,
+  Menu,
 } from 'lucide-vue-next'
 
 const registry: Record<string, Component> = {
@@ -61,7 +74,8 @@ const registry: Record<string, Component> = {
   ArrowRight, SlidersHorizontal, Settings, Heart, Link, Circle, Terminal,
   Cpu, Layers, GitBranch, Coffee, Mail, ChevronDown,
   Eye, Play, GitMerge, Radio, Video, Box, Hexagon, Leaf, DoorOpen, Waves,
-  MoreHorizontal,
+  MoreHorizontal, Calendar, Archive, FolderOpen, Tag, ChevronLeft, ChevronRight,
+  User, Shield, Rss, List, Copy, Check, Menu,
 }
 
 const props = withDefaults(

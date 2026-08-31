@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 import Inspector from 'unplugin-vue-dev-locator/vite'
+import viteRssPlugin from './vite-plugin-rss'
+import { blogConfig } from './src/config/blog.config'
+
+const rssDataDir = blogConfig.dataDir.replace(/^\//, '')
 
 export default defineConfig({
   define: {
@@ -13,6 +17,7 @@ export default defineConfig({
   plugins: [
     vue(),
     Inspector(),
+    viteRssPlugin('https://somoe.xyz', rssDataDir),
   ],
   resolve: {
     alias: {

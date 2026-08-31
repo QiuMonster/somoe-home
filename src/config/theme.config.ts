@@ -55,7 +55,7 @@ export const themeConfig: ThemeConfig = {
   // 水印配置：Hero 区域背景超大半透明水印文字，通过 CSS 变量驱动
   watermark: {
     enabled: true,               // 是否启用水印（false 则不显示）
-    text: 'QiuMonster',          // 水印文字内容
+      text: 'SOMOE',          // 水印文字内容
     fontSize: 16,                // 字体大小（vw 视口宽度单位，值越大字越大）
     rotate: -12,                 // 旋转角度（负数逆时针，正数顺时针）
     offsetX: 0,                  // 水平偏移（vw，0 为居中，正值右移，负值左移）

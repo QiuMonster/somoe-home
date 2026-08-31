@@ -1,33 +1,72 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useConfig } from '@/hooks/useConfig'
+import { useTheme } from '@/hooks/useTheme'
 import SIcon from '@/components/base/SIcon.vue'
 import STheme from '@/components/base/STheme.vue'
 import STransition from '@/components/base/STransition.vue'
 
 const route = useRoute()
-const { profile, resolvedAnim, setAnim, resetAnim } = useConfig()
+const { profile } = useConfig()
+const { resolved } = useTheme()
+
+const navItems = computed(() => profile.nav)
+const currentLogo = computed(() => resolved.value === 'dark' ? (profile.logoDark || profile.logo) : profile.logo)
+
+function isActive(path: string): boolean {
+  if (path === '/') return route.path === '/'
+  return route.path === path || route.path.startsWith(path + '/')
+}
+
+const colorPalette: Record<string, { active: string; inactive: string; mobileShort: string }> = {
+  sky: {
+    active: 'border-sky-500 bg-sky-500/15 text-sky-500 ring-2 ring-sky-500/30',
+    inactive: 'border-transparent bg-sky-500/10 text-sky-500/70 hover:bg-sky-500/15 hover:text-sky-500',
+    mobileShort: 'bg-sky-500/10 text-sky-500',
+  },
+  amber: {
+    active: 'border-amber-500 bg-amber-500/15 text-amber-500 ring-2 ring-amber-500/30',
+    inactive: 'border-transparent bg-amber-500/10 text-amber-500/70 hover:bg-amber-500/15 hover:text-amber-500',
+    mobileShort: 'bg-amber-500/10 text-amber-500',
+  },
+  emerald: {
+    active: 'border-emerald-500 bg-emerald-500/15 text-emerald-500 ring-2 ring-emerald-500/30',
+    inactive: 'border-transparent bg-emerald-500/10 text-emerald-500/70 hover:bg-emerald-500/15 hover:text-emerald-500',
+    mobileShort: 'bg-emerald-500/10 text-emerald-500',
+  },
+  violet: {
+    active: 'border-violet-500 bg-violet-500/15 text-violet-500 ring-2 ring-violet-500/30',
+    inactive: 'border-transparent bg-violet-500/10 text-violet-500/70 hover:bg-violet-500/15 hover:text-violet-500',
+    mobileShort: 'bg-violet-500/10 text-violet-500',
+  },
+  rose: {
+    active: 'border-rose-500 bg-rose-500/15 text-rose-500 ring-2 ring-rose-500/30',
+    inactive: 'border-transparent bg-rose-500/10 text-rose-500/70 hover:bg-rose-500/15 hover:text-rose-500',
+    mobileShort: 'bg-rose-500/10 text-rose-500',
+  },
+}
+
+function getColor(color: string) {
+  return colorPalette[color] || colorPalette['sky']
+}
 
 const scrolled = ref(false)
-const panelOpen = ref(false)
 const menuOpen = ref(false)
 
 function onScroll() {
   scrolled.value = window.scrollY > 40
 }
-function togglePanel() {
-  panelOpen.value = !panelOpen.value
-  menuOpen.value = false
-}
 function toggleMenu() {
   menuOpen.value = !menuOpen.value
-  panelOpen.value = false
 }
 function closeAll() {
   menuOpen.value = false
-  panelOpen.value = false
 }
+
+watch(() => route.path, () => {
+  menuOpen.value = false
+})
 
 onMounted(() => {
   onScroll()
@@ -52,8 +91,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
           class="group flex items-center gap-2 text-lg font-semibold tracking-tight"
           @click="closeAll"
         >
-          <template v-if="profile.logo">
-            <img :src="profile.logo" alt="Somoe Home" class="h-8 w-8 rounded-full object-cover transition-transform duration-500 group-hover:rotate-6" />
+          <template v-if="currentLogo">
+            <img :src="currentLogo" alt="Somoe Home" class="h-8 w-8 rounded-full object-cover transition-transform duration-500 group-hover:rotate-6" />
             <span class="text-gradient font-extrabold">Somoe Home</span>
           </template>
           <template v-else>
@@ -68,113 +107,51 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
         <div class="flex items-center gap-1.5 sm:gap-2">
           <!-- 桌面端：胶囊菜单 -->
           <router-link
-            to="/"
+            v-for="item in navItems"
+            :key="item.path"
+            :to="item.path"
             class="hidden rounded-full border px-4 py-2 text-sm font-bold transition-all duration-300 sm:inline-block"
-            :class="route.path === '/' ? 'border-sky-500 bg-sky-500/15 text-sky-500 ring-2 ring-sky-500/30' : 'border-transparent bg-sky-500/10 text-sky-500/70 hover:bg-sky-500/15 hover:text-sky-500'"
+            :class="isActive(item.path) ? getColor(item.color).active : getColor(item.color).inactive"
           >
-            首页
+            {{ item.label }}
           </router-link>
 
+          <!-- 搜索（桌面+移动端均显示） -->
           <router-link
-            to="/friends"
-            class="hidden rounded-full border px-4 py-2 text-sm font-bold transition-all duration-300 sm:inline-block"
-            :class="route.path === '/friends' ? 'border-rose-500 bg-rose-500/15 text-rose-500 ring-2 ring-rose-500/30' : 'border-transparent bg-rose-500/10 text-rose-500/70 hover:bg-rose-500/15 hover:text-rose-500'"
+            to="/search"
+            class="flex h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-primary"
+            aria-label="搜索"
+            @click="closeAll"
           >
-            友链
+            <SIcon name="Search" :size="20" />
           </router-link>
 
-          <!-- 通用圆形按钮：GitHub -->
+          <!-- GitHub（仅桌面端） -->
           <a
             href="https://github.com/QiuMonster/somoe-home"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-primary"
+            class="hidden h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-primary sm:flex"
             aria-label="GitHub"
           >
             <SIcon name="Github" :size="20" />
           </a>
 
-          <!-- 主题切换 -->
+          <!-- 主题切换（桌面+移动端均显示） -->
           <STheme :size="20" />
 
-          <!-- 动效调节 -->
-          <div class="relative hidden sm:block">
-            <button
-              type="button"
-              class="flex h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-primary"
-              :class="panelOpen && 'text-primary'"
-              aria-label="动效调节"
-              @click="togglePanel"
-            >
-              <SIcon name="SlidersHorizontal" :size="20" />
-            </button>
+          <!-- RSS（仅桌面端） -->
+          <a
+              href="/rss.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="hidden h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-orange-500 sm:flex"
+              aria-label="RSS"
+          >
+            <SIcon name="Rss" :size="20" />
+          </a>
 
-            <STransition name="scale">
-              <div
-                v-if="panelOpen"
-                class="absolute right-0 top-12 w-72 rounded-2xl glass p-4 shadow-float"
-              >
-                <div class="mb-3 flex items-center justify-between">
-                  <span class="text-sm font-semibold text-ink">动效调节</span>
-                  <button
-                    type="button"
-                    class="text-xs text-ink-faint transition-colors hover:text-primary"
-                    @click="resetAnim"
-                  >
-                    重置
-                  </button>
-                </div>
-
-                <label class="block">
-                  <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                    <span>入场时长</span><span>{{ resolvedAnim.duration.toFixed(2) }}s</span>
-                  </div>
-                  <input
-                    type="range" min="0.3" max="1.5" step="0.05"
-                    :value="resolvedAnim.duration"
-                    class="w-full accent-[rgb(var(--color-primary))]"
-                    @input="setAnim({ duration: Number(($event.target as HTMLInputElement).value) })"
-                  />
-                </label>
-
-                <label class="mt-3 block">
-                  <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                    <span>视差强度</span><span>{{ resolvedAnim.parallaxStrength.toFixed(2) }}</span>
-                  </div>
-                  <input
-                    type="range" min="0" max="0.5" step="0.02"
-                    :value="resolvedAnim.parallaxStrength"
-                    class="w-full accent-[rgb(var(--color-primary))]"
-                    @input="setAnim({ parallaxStrength: Number(($event.target as HTMLInputElement).value) })"
-                  />
-                </label>
-
-                <label class="mt-3 block">
-                  <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                    <span>Hover 强度</span><span>{{ resolvedAnim.hoverIntensity.toFixed(2) }}</span>
-                  </div>
-                  <input
-                    type="range" min="0" max="1" step="0.05"
-                    :value="resolvedAnim.hoverIntensity"
-                    class="w-full accent-[rgb(var(--color-primary))]"
-                    @input="setAnim({ hoverIntensity: Number(($event.target as HTMLInputElement).value) })"
-                  />
-                </label>
-
-                <label class="mt-3 flex items-center justify-between text-xs text-ink-muted">
-                  <span>启用滚动视差</span>
-                  <input
-                    type="checkbox"
-                    :checked="resolvedAnim.enableParallax"
-                    class="accent-[rgb(var(--color-primary))]"
-                    @change="setAnim({ enableParallax: ($event.target as HTMLInputElement).checked })"
-                  />
-                </label>
-              </div>
-            </STransition>
-          </div>
-
-          <!-- 移动端：更多按钮 -->
+          <!-- 移动端：菜单按钮 -->
           <button
             type="button"
             class="flex h-10 w-10 items-center justify-center rounded-full glass text-ink-muted transition-colors duration-300 hover:text-primary sm:hidden"
@@ -182,99 +159,58 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             aria-label="菜单"
             @click="toggleMenu"
           >
-            <SIcon :name="menuOpen ? 'X' : 'MoreHorizontal'" :size="20" />
+            <SIcon :name="menuOpen ? 'X' : 'Menu'" :size="20" />
           </button>
         </div>
       </nav>
+
+      <!-- 移动端：遮罩层 -->
+      <div
+        v-if="menuOpen"
+        class="fixed inset-0 z-40 sm:hidden"
+        @click="closeAll"
+      />
 
       <!-- 移动端下拉菜单 -->
       <STransition name="scale">
         <div
           v-if="menuOpen"
-          class="mt-2 rounded-2xl glass p-3 shadow-float sm:hidden"
+          class="relative z-50 mt-2 rounded-2xl bg-surface/95 p-3 shadow-float backdrop-blur-xl sm:hidden dark:bg-surface-dark/95"
+          @click.stop
         >
           <div class="flex flex-col gap-1">
             <router-link
-              to="/"
+              v-for="item in navItems"
+              :key="item.path"
+              :to="item.path"
               class="flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-200"
-              :class="route.path === '/' ? 'border-sky-500 bg-sky-500/15 text-sky-500 ring-2 ring-sky-500/30' : 'border-transparent bg-sky-500/10 text-sky-500/70 hover:bg-sky-500/15 hover:text-sky-500'"
-              @click="closeAll"
+              :class="isActive(item.path) ? getColor(item.color).active : getColor(item.color).inactive"
             >
-              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-sky-500/10 text-xs font-bold text-sky-500">首</span>
-              首页
-            </router-link>
-
-            <router-link
-              to="/friends"
-              class="flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-200"
-              :class="route.path === '/friends' ? 'border-rose-500 bg-rose-500/15 text-rose-500 ring-2 ring-rose-500/30' : 'border-transparent bg-rose-500/10 text-rose-500/70 hover:bg-rose-500/15 hover:text-rose-500'"
-              @click="closeAll"
-            >
-              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-rose-500/10 text-xs font-bold text-rose-500">友</span>
-              友链
+              <span class="flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold" :class="getColor(item.color).mobileShort">{{ item.shortLabel || item.label.charAt(0) }}</span>
+              {{ item.label }}
             </router-link>
 
             <div class="my-1 border-t border-line" />
 
-            <!-- 动效调节（移动端内嵌） -->
-            <div class="px-4 py-2">
-              <div class="mb-2 flex items-center justify-between">
-                <span class="text-xs font-semibold text-ink">动效调节</span>
-                <button
-                  type="button"
-                  class="text-xs text-ink-faint transition-colors hover:text-primary"
-                  @click="resetAnim"
-                >
-                  重置
-                </button>
-              </div>
+            <a
+              href="/rss.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-bold text-ink-muted transition-all duration-200 hover:bg-orange-500/10 hover:text-orange-500"
+            >
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-orange-500/10 text-xs font-bold text-orange-500">R</span>
+              RSS 订阅
+            </a>
 
-              <label class="block">
-                <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                  <span>入场时长</span><span>{{ resolvedAnim.duration.toFixed(2) }}s</span>
-                </div>
-                <input
-                  type="range" min="0.3" max="1.5" step="0.05"
-                  :value="resolvedAnim.duration"
-                  class="w-full accent-[rgb(var(--color-primary))]"
-                  @input="setAnim({ duration: Number(($event.target as HTMLInputElement).value) })"
-                />
-              </label>
-
-              <label class="mt-2 block">
-                <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                  <span>视差强度</span><span>{{ resolvedAnim.parallaxStrength.toFixed(2) }}</span>
-                </div>
-                <input
-                  type="range" min="0" max="0.5" step="0.02"
-                  :value="resolvedAnim.parallaxStrength"
-                  class="w-full accent-[rgb(var(--color-primary))]"
-                  @input="setAnim({ parallaxStrength: Number(($event.target as HTMLInputElement).value) })"
-                />
-              </label>
-
-              <label class="mt-2 block">
-                <div class="mb-1 flex items-center justify-between text-xs text-ink-muted">
-                  <span>Hover 强度</span><span>{{ resolvedAnim.hoverIntensity.toFixed(2) }}</span>
-                </div>
-                <input
-                  type="range" min="0" max="1" step="0.05"
-                  :value="resolvedAnim.hoverIntensity"
-                  class="w-full accent-[rgb(var(--color-primary))]"
-                  @input="setAnim({ hoverIntensity: Number(($event.target as HTMLInputElement).value) })"
-                />
-              </label>
-
-              <label class="mt-2 flex items-center justify-between text-xs text-ink-muted">
-                <span>启用滚动视差</span>
-                <input
-                  type="checkbox"
-                  :checked="resolvedAnim.enableParallax"
-                  class="accent-[rgb(var(--color-primary))]"
-                  @change="setAnim({ enableParallax: ($event.target as HTMLInputElement).checked })"
-                />
-              </label>
-            </div>
+            <a
+              href="https://github.com/QiuMonster/somoe-home"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-bold text-ink-muted transition-all duration-200 hover:bg-primary/10 hover:text-primary"
+            >
+              <span class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">G</span>
+              GitHub
+            </a>
           </div>
         </div>
       </STransition>
