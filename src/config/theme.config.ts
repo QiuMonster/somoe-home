@@ -43,7 +43,7 @@ export const themeConfig: ThemeConfig = {
 
   // 背景动态流体配置（GLSL 着色器，叠加在波点之上）
   fluid: {
-    enabled: false,               // 是否启用流体效果（false 则仅显示波点背景）
+    enabled: true,               // 是否启用流体效果（false 则仅显示波点背景）
     color1: '79 144 205',        // 流体颜色1：雾蓝（RGB 三元组字符串）
     color2: '100 194 166',       // 流体颜色2：青绿
     color3: '232 220 202',       // 流体颜色3：鎏金

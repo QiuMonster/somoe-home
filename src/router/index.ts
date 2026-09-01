@@ -7,11 +7,6 @@ const routes: RouteRecordRaw[] = [
     name: 'home',
     component: () => import('@/views/HomeView.vue'),
   },
-  {
-    path: '/friends',
-    name: 'friends',
-    component: () => import('@/views/FriendsView.vue'),
-  },
 ]
 
 const router = createRouter({

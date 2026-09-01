@@ -1,23 +1,24 @@
 # Somoe Home
 
-> Somoe Home — QiuMonster 创建的个人聚合门户，汇聚内容创作、开源项目与工具站点。
+> Somoe Home — 纯净版个人导航网站模板，汇聚内容创作、开源项目与工具站点。
 
 ## 简介
 
-Somoe Home 是一个极简液态轻拟物风格的个人聚合门户主页，由 [QiuMonster](https://github.com/QiuMonster) 主理。站点将个人项目、开源仓库、博客创作、社交平台和常用服务统一聚合展示，一键触达。
+Somoe Home 是一个极简液态轻拟物风格的个人导航主页模板，由 [QiuMonster](https://github.com/QiuMonster) 主理。站点将个人项目、开源仓库、博客创作、社交平台和常用服务统一聚合展示，一键触达。所有导航菜单、底部链接、备案信息、布局宽度均通过配置文件驱动，修改配置即可完成全站定制。
 
 ### 特性
 
 - **液态轻拟物风格** — 磨砂玻璃质感卡片 + 雾蓝青渐变主色 + 波点纹理 + GLSL 流体背景
 - **暗色 / 亮色主题** — 跟随系统自动切换，支持手动切换，切换过程平滑过渡
+- **Logo 主题适配** — 亮色/暗色主题可分别配置不同 Logo，随主题切换自动更换
 - **GLSL 流体着色器** — WebGL 驱动的液态水银流体背景，着色器文件独立可切换
 - **波点 + 流体分层** — CSS 波点层与 Canvas 流体层分离，配置驱动可独立开关
-- **配置驱动** — 背景/波点/流体/水印/动效参数全部配置化，逐行注释
+- **全配置驱动** — 导航菜单/底部链接/备案信息/布局宽度/背景/波点/流体/水印参数全部配置化，逐行注释
+- **分类配置** — 配置文件按职责分类（nav / footer / layout / profile / site / theme），互不耦合
 - **站点置顶** — 支持置顶常用站点，偏好本地持久化
 - **搜索过滤** — 实时搜索站点名称、描述与标签
-- **动效调节** — 可调节入场时长、视差强度、Hover 强度
 - **GSAP 入场动画** — Hero 区域协调入场动效 + 卡片 3D hover 效果
-- **移动端适配** — 响应式布局，移动端下拉菜单，友链卡片网格自适应
+- **移动端适配** — 响应式布局，移动端下拉菜单，点击外部区域自动关闭
 - **水印效果** — Hero 区域超大半透明水印文字，CSS 变量驱动
 - **域名展示** — 个人域名一行展示，蓝色下划线分隔
 - **社交按钮** — 彩色边框 + hover 填充反转 + 边缘高光动效
@@ -39,16 +40,14 @@ Somoe Home 是一个极简液态轻拟物风格的个人聚合门户主页，由
 
 ```
 somoe_home/
-├── public/                   # 静态资源（头像、logo、favicon、数据文件）
-│   └── data/
-│       └── friends.json5     # 友链数据
+├── public/                   # 静态资源（头像、logo、favicon）
 ├── src/
 │   ├── assets/
 │   │   ├── shaders/          # GLSL 着色器文件
 │   │   │   ├── base.vert     # 顶点着色器
 │   │   │   ├── fluid.frag    # 透明流体片元着色器
 │   │   │   ├── 1.frag        # 液态水银着色器（当前使用）
-│   │   │   └── fluid-dots.frag # 旧版波点+流体合一着色器
+│   │   │   └── fluid-dots.frag # 波点+流体合一着色器
 │   │   └── style/
 │   │       └── global.css    # 全局样式、主题变量、CSS 组件
 │   ├── components/
@@ -59,23 +58,25 @@ somoe_home/
 │   │   │   ├── STheme.vue    # 主题切换
 │   │   │   └── STransition.vue # 过渡动画
 │   │   └── layout/           # 布局组件
-│   │       ├── Navbar.vue    # 顶部导航（桌面+移动端）
-│   │       ├── Hero.vue      # 个人信息首屏
-│   │       ├── SiteGrid.vue  # 站点网格
-│   │       └── Footer.vue    # 底部信息
-│   ├── config/
+│   │       ├── Navbar.vue    # 顶部导航（桌面+移动端，菜单数据由 nav.config 驱动）
+│   │       ├── Hero.vue      # 个人信息首屏（maxWidth 由 layout.config 驱动）
+│   │       ├── SiteGrid.vue  # 站点网格（maxWidth 由 layout.config 驱动）
+│   │       └── Footer.vue    # 底部信息（链接/备案由 footer.config 驱动）
+│   ├── config/               # 配置文件（按职责分类，逐行注释）
+│   │   ├── nav.config.ts     # 顶部导航菜单/链接配置
+│   │   ├── footer.config.ts  # 底部品牌/链接/版权/备案配置
+│   │   ├── layout.config.ts  # 布局宽度配置（Hero/SiteGrid/Footer）
 │   │   ├── profile.config.ts # 个人信息配置（昵称/简介/社交/域名/logo）
 │   │   ├── site.config.ts    # 站点分类与项目数据
 │   │   └── theme.config.ts   # 主题/背景/波点/流体/水印/动效配置
 │   ├── hooks/
-│   │   ├── useConfig.ts      # 全局配置读取
+│   │   ├── useConfig.ts      # 全局配置读取（统一导出 nav/footer/layout 等）
 │   │   ├── useGsapAnim.ts    # GSAP 动画钩子
-│   │   └── useTheme.ts       # 主题切换逻辑
+│   │   └── useTheme.ts       # 主题切换逻辑（resolved 可用于判断亮/暗色）
 │   ├── types/
 │   │   └── config.d.ts       # TS 类型定义
 │   ├── views/
-│   │   ├── HomeView.vue      # 首页
-│   │   └── FriendsView.vue   # 友链页
+│   │   └── HomeView.vue      # 首页
 │   ├── router/
 │   │   └── index.ts          # 路由配置
 │   ├── App.vue               # 根组件（三层结构：流体+波点+内容）
@@ -123,6 +124,65 @@ pnpm preview
 
 ## 自定义配置
 
+所有配置文件位于 `src/config/`，按职责分类，每个字段均有逐行注释。修改配置后刷新页面即可生效。
+
+### 修改导航菜单
+
+编辑 `src/config/nav.config.ts`：
+
+```ts
+export const navConfig: NavConfig = {
+  brand: {
+    name: 'Your Brand',       // 品牌名称
+    icon: 'Sparkles',         // 品牌 Lucide 图标名
+  },
+  topMenu: [                  // 顶部胶囊菜单（桌面端+移动端面板）
+    { id: 'home', label: '首页', path: '/', icon: 'Home', color: 'sky' },
+    // color 可选值：sky / rose / amber / emerald / violet
+  ],
+  topLinks: [                 // 顶部圆形图标链接（适合 GitHub 等外部入口）
+    { id: 'github', label: 'GitHub', url: 'https://github.com/...', icon: 'Github', external: true },
+  ],
+  mobileExtraLinks: [],       // 移动端面板额外链接（桌面端不渲染）
+}
+```
+
+### 修改底部信息
+
+编辑 `src/config/footer.config.ts`：
+
+```ts
+export const footerConfig: FooterConfig = {
+  brand: {
+    name: 'Your Brand',       // 底部品牌名称
+    icon: 'Sparkles',         // 品牌 Lucide 图标名
+    desc: '你的站点描述',      // 品牌描述
+  },
+  links: [                    // 底部导航链接（支持站内路由与外部链接）
+    { id: 'home', label: '首页', path: '/' },
+    { id: 'blog', label: '博客', url: 'https://your-blog.com' },
+  ],
+  copyright: '© 2026 Your Name. Open-source under MIT License.',
+  poweredBy: 'Powered by YourName',   // 驱动/致谢文案，留空则不显示
+  filing: {                   // 备案信息，留空则不显示
+    icp: { text: '京ICP备XXXXXXXX号-X', url: 'https://beian.miit.gov.cn/' },
+    police: { text: '京公网安备XXXXXXXXXXXXXX号', url: 'https://beian.mps.gov.cn/...', icon: '/beian.png' },
+  },
+}
+```
+
+### 修改布局宽度
+
+编辑 `src/config/layout.config.ts`：
+
+```ts
+export const layoutConfig: LayoutConfig = {
+  hero: { maxWidth: '42rem' },     // Hero 个人信息区域最大宽度
+  siteGrid: { maxWidth: '56rem' }, // 站点卡片网格区域最大宽度
+  footer: { maxWidth: '64rem' },   // 底部区域最大宽度
+}
+```
+
 ### 修改个人信息
 
 编辑 `src/config/profile.config.ts`：
@@ -133,8 +193,10 @@ export const profileConfig: ProfileConfig = {
   slogan: '你的个性标语',
   bio: '你的个人简介，支持 \\n 换行',
   github: 'https://github.com/yourname',
-  avatar: '/your-avatar.jpg',   // 放入 public/ 目录
-  logo: '/your-logo.png',       // 导航栏+底部logo，放入 public/ 目录
+  avatar: '/your-avatar.jpg',       // 放入 public/ 目录，留空则使用首字母渐变头像
+  logo: '/your-logo.png',           // 默认 Logo，放入 public/ 目录
+  logoLight: '/logo-light.png',     // 亮色主题 Logo（优先于 logo）
+  logoDark: '/logo-dark.png',       // 暗色主题 Logo（优先于 logo）
   tags: ['标签1', '标签2'],
   socials: [
     { name: 'GitHub', url: 'https://github.com/yourname', icon: 'Github' },
@@ -142,11 +204,6 @@ export const profileConfig: ProfileConfig = {
   domains: [
     { name: 'example.com', url: 'https://example.com' },
   ],
-  footer: {
-    techStack: ['Vue3', 'TypeScript'],
-    copyright: '© 2026 YourName',
-    signature: 'Your signature.',
-  },
 }
 ```
 
@@ -224,10 +281,6 @@ import customFrag from '@/assets/shaders/fluid.frag?raw'
 ```
 
 新增图标时，在 `src/components/base/SIcon.vue` 中补充 import 和注册即可。
-
-### 修改友链数据
-
-编辑 `public/data/friends.json5`，每项包含 `name`、`url`、`avatar`、`description`、`bg` 字段。
 
 ## 部署
 

@@ -5,7 +5,7 @@ import { useConfig } from '@/hooks/useConfig'
 import SCard from '@/components/base/SCard.vue'
 import SIcon from '@/components/base/SIcon.vue'
 
-const { site, isPinned, togglePin, resolvedAnim } = useConfig()
+const { site, isPinned, togglePin, layout, theme } = useConfig()
 
 const query = ref('')
 const onlyPinned = ref(false)
@@ -36,7 +36,7 @@ const filteredCategories = computed<SiteCategory[]>(() => {
   <section class="px-4 py-16">
     <div class="container">
       <!-- 工具条 -->
-      <div class="mx-auto mb-8 flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center">
+      <div class="mx-auto mb-8 flex flex-col gap-3 sm:flex-row sm:items-center" :style="{ maxWidth: layout.siteGrid.maxWidth }">
         <div class="relative flex-1">
           <SIcon
             name="Search"
@@ -80,7 +80,7 @@ const filteredCategories = computed<SiteCategory[]>(() => {
       </div>
 
       <!-- 按分类展示 -->
-      <div v-if="filteredCategories.length" class="mx-auto max-w-4xl space-y-12">
+      <div v-if="filteredCategories.length" class="mx-auto space-y-12" :style="{ maxWidth: layout.siteGrid.maxWidth }">
         <div v-for="cat in filteredCategories" :key="cat.id">
           <!-- 分类标题 -->
           <div class="mb-5 flex items-center gap-3">
@@ -102,7 +102,7 @@ const filteredCategories = computed<SiteCategory[]>(() => {
               :key="item.id"
               :item="item"
               :pinned="isPinned(item.id)"
-              :intensity="resolvedAnim.hoverIntensity"
+              :intensity="theme.anim.hoverIntensity"
               :index="i"
               @pin="togglePin"
             />

@@ -4,7 +4,8 @@ import Navbar from '@/components/layout/Navbar.vue'
 import Footer from '@/components/layout/Footer.vue'
 import FluidCanvas from '@/components/base/FluidCanvas.vue'
 import { useConfig } from '@/hooks/useConfig'
-import customFrag from '@/assets/shaders/fluid-dots.frag?raw'
+// import customFrag from '@/assets/shaders/fluid.frag?raw'  // 无流体效果
+import customFrag from '@/assets/shaders/fluid-dots.frag?raw'  // y有流体效果
 
 const { theme } = useConfig()
 
