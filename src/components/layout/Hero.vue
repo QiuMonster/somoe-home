@@ -4,7 +4,7 @@ import { useConfig } from '@/hooks/useConfig'
 import { useGsapAnim } from '@/hooks/useGsapAnim'
 import SIcon from '@/components/base/SIcon.vue'
 
-const { profile, theme } = useConfig()
+const { profile, theme, layout } = useConfig()
 const { enter, charsEnter, staggerEnter } = useGsapAnim()
 
 const avatarEl = ref<HTMLElement | null>(null)
@@ -84,7 +84,7 @@ onMounted(async () => {
 <template>
   <section id="about" class="hero-texture relative flex min-h-screen items-center justify-center" :style="watermarkVars">
     <div class="container px-4 py-8 sm:px-6 sm:py-12">
-      <div class="mx-auto max-w-2xl">
+      <div class="mx-auto" :style="{ maxWidth: layout.hero.maxWidth }">
         <!-- 头像 + 名称行 -->
         <div class="flex items-center gap-4 sm:gap-6">
           <div

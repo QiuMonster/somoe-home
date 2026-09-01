@@ -1,20 +1,21 @@
 import type { SiteConfig } from '@/types/config'
 
 export const siteConfig: SiteConfig = {
+  // 站点分类列表（每个分类包含图标、描述及下属站点项，按顺序渲染）
   categories: [
     {
-      id: 'somoe-domain',
-      name: 'SOMOE 域名专属项目',
-      icon: 'Sparkles',
-      desc: 'Somoe 域名下的专属站点项目',
+      id: 'somoe-domain',                    // 分类唯一标识
+      name: 'SOMOE 域名专属项目',              // 分类名称（卡片区域标题）
+      icon: 'Sparkles',                       // 分类 Lucide 图标名
+      desc: 'Somoe 域名下的专属站点项目',       // 分类简述（标题下方灰色小字）
       items: [
         {
-          id: 'somoe-site',
-          title: 'Somoe（SO萌网站）',
-          description: 'somoe，个人内容聚集之地。',
-          url: 'https://somoe.xyz',
-          icon: 'Globe',
-          tags: ['社区', '个人项目', '游戏'],
+          id: 'somoe-site',                   // 站点项唯一标识（用于置顶、搜索匹配）
+          title: 'Somoe（SO萌网站）',          // 站点标题（卡片主文字）
+          description: 'somoe，个人内容聚集之地。', // 站点描述（卡片副文字）
+          url: 'https://somoe.xyz',           // 站点链接（点击卡片跳转地址）
+          icon: 'Globe',                      // 站点 Lucide 图标名
+          tags: ['社区', '个人项目', '游戏'],    // 关键词标签（搜索命中用）
         },
         {
           id: 'somoe-vision',
