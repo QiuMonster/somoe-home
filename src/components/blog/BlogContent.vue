@@ -38,7 +38,6 @@ function applyFancybox() {
   Fancybox.bind(contentEl.value, '[data-fancybox="blog-gallery"]', {
     hideScrollbar: false,
     modal: false,
-    backFocus: false,
     Hash: false,
     placeFocusBack: false,
   })
