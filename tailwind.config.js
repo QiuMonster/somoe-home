@@ -26,8 +26,8 @@ export default {
         line: 'rgb(var(--color-border) / <alpha-value>)',
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', 'sans-serif'],
-        display: ['Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+        sans: ['HarmonyOS Sans SC', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', 'sans-serif'],
+        display: ['HarmonyOS Sans SC', 'Inter', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
       },
       borderRadius: {
         lg: '16px',
