@@ -33,7 +33,7 @@ const filteredCategories = computed<SiteCategory[]>(() => {
 </script>
 
 <template>
-  <section class="px-4 py-16">
+  <section class="py-16">
     <div class="container">
       <!-- 工具条 -->
       <div class="mx-auto mb-8 flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center">

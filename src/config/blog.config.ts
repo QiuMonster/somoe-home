@@ -16,6 +16,23 @@ export interface BlogConfig {
   categoryWiggle: boolean
   /** 分页按钮 hover 是否启用抖动动效 */
   paginationWiggle: boolean
+  /** 归档页文章是否展示简介 */
+  archiveShowDesc: boolean
+  /** 归档页文章 hover 是否启用彩色背景和文字高亮 */
+  archiveColorHover: boolean
+  /** 版权声明配置 */
+  copyright: {
+    /** 站点名称 */
+    siteName: string
+    /** 作者名称 */
+    author: string
+    /** 许可协议名称 */
+    license: string
+    /** 许可协议链接 */
+    licenseUrl: string
+    /** 附加声明行 */
+    notices: string[]
+  }
   /** 博客数据根路径（Vite glob 需同步修改） */
   dataDir: string
 }
@@ -35,7 +52,27 @@ export const blogConfig: BlogConfig = {
   categoryWiggle: false,
   // 分页按钮 hover 是否启用抖动动效
   paginationWiggle: false,
-  // 博客数据根路径（对应 src/data 下的目录名）
+  // 归档页文章是否展示简介
+  archiveShowDesc: true,
+  // 归档页文章 hover 是否启用彩色背景和文字高亮
+  archiveColorHover: true,
+  // 版权声明配置
+  copyright: {
+    // 站点名称
+    siteName: 'Somoe Home',
+    // 作者名称
+    author: 'QiuMonster',
+    // 许可协议名称
+    license: 'CC BY-NC-SA 4.0',
+    // 许可协议链接
+    licenseUrl: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+    // 附加声明行
+    notices: [
+      '转载请注明出处及原作者',
+      '严禁商业用途',
+      '禁止修改或再创作',
+    ],
+  },
   dataDir: '/src/data/blogs',
   // dataDir: '/src/data/self',
 }
